@@ -1,2 +1,2 @@
-# scarlette-custom-exception
-Custom exceptions in Scarlette
+# starlette-custom-exception
+Custom exceptions in Starlette
