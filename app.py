@@ -5,27 +5,32 @@ from starlette.routing import Route
 from error import InvalidUsage, EmptyParamError
 
 async def homepage(request):
+    
+    return JSONResponse({'hello': 'world'})
 
-    a=1
-    b=0
-
+async def raise_except(request):
+    
+    param = None
+    method = 'get'
     try:
-        if a==1:
-            raise InvalidUsage(400, "Invalid usage")
-
-        if b == 0:
-            raise EmptyParamError(403, "value of b is zero")
+        
+        if param == None:
+            raise EmptyParamError(status_code=403, message="value of b is zero")
+        if method == 'get':
+            raise InvalidUsage(status_code=400, message="Invalid usage")
+            
     except InvalidUsage as e:
         return JSONResponse({'error_message': str(e.message), 'status_code': e.status_code})
     except EmptyParamError as e:
-        return JSONResponse({'error_message': str(e.message)})
+        return JSONResponse({'error_message': str(e.message), 'status_code': e.status_code})
         
-        
-    return JSONResponse({'hello': 'world'})
+    
+    
 
 
 routes = [
-    Route("/", endpoint=homepage)
+    Route("/", endpoint=homepage, methods=['GET'])
+    Route("/exception", endpoint=raise_except, methods=['GET'])
 ]
 
 app = Starlette(routes=routes,debug=True)
